@@ -1,31 +1,48 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {VideoPlayer} from '../Screen/VideoPlayer';
+import {color} from 'react-native-elements/dist/helpers';
 
-export const Card = () => {
+export const Card = (props) => {
+  const {colors} = useTheme();
+  const navigation = useNavigation();
   const colorBlack = '#212121';
   return (
-    <View style={{elevation: 4, marginBottom: 4}}>
-      <Image
-        source={{
-          uri: 'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569__480.jpg',
-        }}
-        style={cardStyles.imageStyle}
-      />
-      <View style={cardStyles.cardContainer}>
-        <Ionicons name="md-person-circle" size={40} color={colorBlack} />
-        <View style={{marginLeft: 8, marginBottom: 8}}>
-          <Text
-            style={cardStyles.boldText}
-            ellipsizeMode="tail"
-            numberOfLines={2}>
-            This is dummy title text from Ayush, Such an amazing text from him.
-          </Text>
-          <Text style={{color: '#706e6e'}}>This is sub-title</Text>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('VideoPlayer', {
+          videoId: props.videoId,
+          title: props.title,
+        });
+      }}>
+      <View style={{elevation: 4, marginBottom: 4}}>
+        <Image
+          source={{
+            uri: `https://i.ytimg.com/vi/${props.videoId}/hqdefault.jpg`,
+          }}
+          style={cardStyles.imageStyle}
+        />
+        <View style={cardStyles.cardContainer}>
+          <Ionicons
+            name="md-person-circle"
+            size={40}
+            color={colors.iconColor}
+          />
+          <View style={{marginLeft: 8, marginBottom: 8}}>
+            <Text
+              style={{...cardStyles.boldText, color: colors.textColor}}
+              ellipsizeMode="tail"
+              numberOfLines={2}>
+              {props.title}
+            </Text>
+            <Text style={{color: '#706e6e'}}>{props.channel}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

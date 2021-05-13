@@ -4,18 +4,28 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {search} from '../Screen/Search';
+import {color} from 'react-native-elements/dist/helpers';
 
 export default function Header() {
-  const colorBlack = '#212121';
+  const {colors} = useTheme();
+  const colorBlack = colors.iconColor;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const currentTheme = useSelector((state) => {
+    return state.darkMode;
+  });
 
   return (
     <View style={headerStyles.headerComponents}>
       <View style={headerStyles.youTubeIconStyle}>
         <Entypo name="youtube" size={36} color="red" />
-        <Text style={headerStyles.textStyle}>YouTube</Text>
+        <Text style={{...headerStyles.textStyle, color: colors.textColor}}>
+          YouTube
+        </Text>
       </View>
       <View style={headerStyles.headerIconStyle}>
         <Ionicons
@@ -33,7 +43,14 @@ export default function Header() {
             navigation.navigate('Search');
           }}
         />
-        <Ionicons name="md-person-circle" size={28} color={colorBlack} />
+        <Ionicons
+          name="md-person-circle"
+          size={28}
+          color={colorBlack}
+          onPress={() =>
+            dispatch({type: 'change_theme', payload: !currentTheme})
+          }
+        />
       </View>
     </View>
   );
@@ -48,7 +65,7 @@ export const headerStyles = StyleSheet.create({
   },
   headerComponents: {
     height: 48,
-    backgroundColor: 'white',
+    backgroundColor: color.headerColor,
     justifyContent: 'space-between',
     flexDirection: 'row',
     elevation: 6,
